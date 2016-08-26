@@ -1,10 +1,11 @@
 # README
 
 RaspberryPi用のホームオートメーションサーバです。
+
 リモコンの赤外線情報の記憶・送信、スケジューリング等をRESTfulAPIでやります。
 
 ## 環境
-raspberry pi + nginx + php-phalcon
+raspberry pi + nginx + php7 + php-phalcon + volt + bootstrap
 
 ## 環境構築
 ```
@@ -27,6 +28,9 @@ raspberry pi + nginx + php-phalcon
 # http://dim5.net/phalcon/php-install.html
 
 # nginxの場合
+
+# ---iptables,firewalld---
+# なんかやる
 
 # ---nginxを起動---
 # 接続の確認
