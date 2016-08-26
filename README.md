@@ -1,11 +1,13 @@
-# README
+# ExtremeHomeAutomationSystem-RaspberryPi
 
 RaspberryPi用のホームオートメーションサーバです。
 
-リモコンの赤外線情報の記憶・送信、スケジューリング等をRESTfulAPIでやります。
+リモコンの赤外線情報の記憶・送信、スケジューリング等をRESTful APIでやります。
 
 ## 環境
 raspberry pi + nginx + php7 + php-phalcon + volt + bootstrap
+
+下の方で説明してます。
 
 ## 環境構築
 
@@ -60,6 +62,7 @@ Webサーバーから割り振られた処理を受け取り、最終的にはHT
 だいたいUNIXドメインソケットを使っている
 
 UNIXドメインソケットは以下の様なものです。
+
 1. サーバー側が`listen hogehoge`とかをすると`/tmp/hogehoge.sock`みたいなファイルが出来る。
 2. クライアント側はこのsockファイルを指定する事によりサーバー側とのコネクションが確立される。
 3. listenを閉じるとsockファイルも消えて通信が閉じる
