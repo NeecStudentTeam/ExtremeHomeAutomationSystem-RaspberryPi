@@ -9,9 +9,44 @@ raspberry pi + nginx + php7 + php-phalcon + volt + bootstrap
 
 下の方で説明してます。
 
-## 環境構築
+## 環境構築(xampp)
+
+Windows XAMPP環境への構築
+
+### XAMPPインストール
+https://www.apachefriends.org/download.html  
+PHP7 32Bit をインストール
+
+### Phalconモジュールをインクルード
+https://phalconphp.com/ja/download/windows  
+Phalcon 3.0.0 - Windows x86 for PHP 7.0.0 (vc14) をダウンロードし、解凍
+
+`C:\xampp\php\ext`に`php_phalcon.dll`を入れる
+
+`C:\xampp\php\php.ini`に以下を追記
+```
+extension=php_phalcon.dll
+```
+
+### Gitからプロジェクトをデプロイ
+
+以下のフォルダを空にし、以下のフォルダにgit pull
+`C:\xampp\htdocs`
+
+### 確認
+
+XAMPPでApacheを起動
+
+以下にアクセス
+http://localhost/
+
+エラーが発生しなかったら完了
+
+## 環境構築(pi)
 
 Raspberry Piへの環境構築手順
+
+未完成
 
 ```
 # ---nginxをインストール---
