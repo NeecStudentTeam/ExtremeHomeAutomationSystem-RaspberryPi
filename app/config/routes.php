@@ -24,3 +24,27 @@
 | 
 */
 $router->add('/', 'hello::index');
+
+$router->addGet("/api/:params", array(
+        "controller" => "Api",
+        "action"     => "getEndpoint",
+        "params"     => 1,
+));
+
+$router->addPost("/api/:params", array(
+        "controller" => "Api",
+        "action"     => "postEndpoint",
+        "params"     => 1,
+));
+
+$router->addPut("/api/:params", array(
+        "controller" => "Api",
+        "action"     => "putEndpoint",
+        "params"     => 1,
+));
+
+$router->addDelete("/api/:params", array(
+        "controller" => "Api",
+        "action"     => "deleteEndpoint",
+        "params"     => 1,
+));
