@@ -8,48 +8,107 @@
 */
 class ApiController extends ControllerBase
 {
+  // モデルの取得
   // GET /api/models
   // GET /api/models/1
-  // モデルの表示
+  // GET /api/models/1/child_model
+  // GET /api/models/1/buttons
+  // GET /api/models/1/buttons/1
+  // モデルのメソッド実行
+  // GET /api/models/1/send
+  // model1->send();
+  // モデルのスタティックメソッドにモデル一覧を渡して実行
+  // GET /api/models/deletes
+  // $models =  Model.find();
+  // Model->deletes($models);
   public function getEndpointAction(...$params)
   {
-  $callback = $this->request->getQuery('callback');
+    $tmp_params = $params;
+    $param = array_shift($tmp_params);
+    $model = null;
+    $models = $param::find();
+    while(count($tmp_params) > 0)
+    {
+      $param = array_shift($tmp_params);
 
-    // テスト用のモデルっぽいものを作成しておく
-    $models = array();
-    for($i = 0; $i < 20; $i++) {
-      $models[] = array(
-        'id' => $i,
-        'name' => 'TestModel' + $i,
-        'created_at' => '2011/01/01 20:00:00'
-      );
+      // 一意のmodelが取得されていた場合
+      if($model) {
+        // パラメータの名前のメソッドがあったら実行
+        if(method_exists($model,$param)) {
+            $model->$param();
+            $model = null;
+        }
+        // パラメータの名前のプロパティがあったら取得
+        else if(property_exists($model,$param)) {
+          // プロパティを取得
+          $property = $model->{$param};
+          // プロパティが配列の場合、modelsを更新
+          if(is_array($property)) {
+            // 自身に追加
+            $this->add_model_this($model, true);
+            // modelsを更新
+            $models = $property;
+            $model = null;
+          }
+          // 一意の場合、modelを更新
+          else
+          {
+            // 自身に追加
+            $this->add_model_this($model, false);
+            $model = $property;
+            // modelを更新
+            $model = $property;
+            $models = null;
+          }
+        }
+        // 見つからないエラー
+        else {
+          $model = null;
+          $models = null;
+          echo "見つからないよ";
+        }
+
+        continue;
+      }
+
+      // 複数のmodelが取得されていた場合
+      if($models) {
+        // パラメータが数値だった場合、それをIDとして一意のモデルを取得
+        if(is_numeric($param)) {
+          // 一意のモデル取得
+          $model = null;
+          foreach ($models as $models_model) {
+            if($models_model->id == $param) {
+              $model = $models_model;
+            }
+          }
+          // エラー
+          if(!$model) {
+            echo "見つからないよ";
+          }
+          // 自身に追加
+          $this->add_model_this($model, true);
+          // modelsにnullを設定
+          $models = null;
+        }
+        // パラメータが数値じゃなかった場合、スタティックメソッド名として実行
+        else {
+          $models->getType()::$param($models);
+          // modelsにnullを設定
+          $models = null;
+        }
+
+        continue;
+      }
     }
 
-    $last_param = array_pop($params);
-    // 数値だった場合、一意のモデル
-    if(is_numeric($last_param)){
-      // 指定IDのモデルが存在するかどうか
-      if(array_key_exists($last_param,$models)){
-        $this->output_for_json($models[$last_param]);
-      }
-      // 見つからなかったらエラー
-      else {
-        $this->response->setStatusCode(404, "Not Found");
-        // エラーメッセージを出力
-        $error = array(
-          'error' => array(
-            'code'    => 404,
-            'message' => '指定IDのモデルが存在しません。'
-          )
-        );
-        $this->output_for_json($error);
-      }
+    // 最後にmodels or modelを出力
+    if($model) {
+      $this->output_for_json($model);
     }
-    // 数値じゃなかった場合、全てのモデル
-    else {
+    else if($models) {
       $this->output_for_json($models);
     }
-
   }
 
   // POST /api/models
@@ -84,7 +143,7 @@ class ApiController extends ControllerBase
   }
 
   // jsonで出力する
-  // callbackを指定するとjsonpで出力する
+  // GETのcallbackパラメータを取得し、json or jsonpを自動で判断する
   // また、出力する際にviewを無効にする
   private function output_for_json($var)
   {
@@ -107,6 +166,20 @@ class ApiController extends ControllerBase
       $this->response->setHeader("Content-Type", "application/json");
       // jsonで出力
       echo $json_str;
+    }
+  }
+
+  // 自分にモデルを追加する
+  // $model_is_arrayをtrueにすると、arrayとして追加する
+  private function add_model_this($value, $value_is_array = false)
+  {
+    if($value_is_array) {
+      $model_name = MyLib::underscore(get_class($value));
+      $this->$model_name = $value;
+    }
+    else {
+      $model_name = MyLib::singularByPlural(MyLib::underscore(get_class($value)));
+      $this->$model_name = $value;
     }
   }
 }
