@@ -6,9 +6,9 @@ use Phalcon\Db\Reference;
 use Phalcon\Mvc\Model\Migration;
 
 /**
- * Class RobotsMigration_100
+ * Class RemoconsMigration_100
  */
-class RobotsMigration_100 extends Migration
+class RemoconsMigration_100 extends Migration
 {
     /**
      * Define the table structure
@@ -17,7 +17,7 @@ class RobotsMigration_100 extends Migration
      */
     public function morph()
     {
-        $this->morphTable('robots', [
+        $this->morphTable('remocons', [
                 'columns' => [
                     new Column(
                         'id',
@@ -30,29 +30,12 @@ class RobotsMigration_100 extends Migration
                         ]
                     ),
                     new Column(
-                        'robot_id',
-                        [
-                            'type' => Column::TYPE_INTEGER,
-                            'size' => 11,
-                            'after' => 'id'
-                        ]
-                    ),
-                    new Column(
                         'name',
                         [
                             'type' => Column::TYPE_VARCHAR,
-                            'size' => 50,
-                            'after' => 'robot_id'
-                        ]
-                    ),
-                    new Column(
-                        'created_at',
-                        [
-                            'type' => Column::TYPE_TIMESTAMP,
-                            'default' => "CURRENT_TIMESTAMP",
                             'notNull' => true,
-                            'size' => 1,
-                            'after' => 'name'
+                            'size' => 50,
+                            'after' => 'id'
                         ]
                     )
                 ],

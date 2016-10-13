@@ -1,46 +1,45 @@
 <?php
 
-class Robots extends \Phalcon\Mvc\Model
+class RemoconButtons extends \Phalcon\Mvc\Model
 {
 
     /**
      *
      * @var integer
      * @Primary
-     * @Identity
      * @Column(type="integer", length=11, nullable=false)
      */
     public $id;
 
     /**
      *
-     * @var integer
-     * @Column(type="integer", length=11, nullable=true)
-     */
-    public $robot_id;
-
-    /**
-     *
      * @var string
-     * @Column(type="string", length=50, nullable=true)
+     * @Column(type="string", length=50, nullable=false)
      */
     public $name;
 
     /**
      *
-     * @var string
-     * @Column(type="string", nullable=false)
+     * @var integer
+     * @Column(type="integer", length=11, nullable=false)
      */
-    public $created_at;
+    public $remocon_id;
 
-    public function initialize()
+    /**
+     *
+     * @var string
+     * @Column(type="string", length=50, nullable=false)
+     */
+    public $ir_data;
+
+    /**
+     * 赤外線情報送信
+     *
+     * @return string
+     */
+    public function send()
     {
-        $this->hasOne("robot_id", "Robots", "id", array(
-            "alias" => "robot"
-        ));
-        $this->belongsTo("robot_id", "Robots", "id", array(
-            "alias" => "child_robots"
-        ));
+        echo 'send ir : ' . base64_encode($this->ir_data);
     }
 
     /**
@@ -50,20 +49,14 @@ class Robots extends \Phalcon\Mvc\Model
      */
     public function getSource()
     {
-        return 'robots';
-    }
-
-    public function test()
-    {
-      echo "test";
-      echo json_encode($this->child_robots);
+        return 'remocon_buttons';
     }
 
     /**
      * Allows to query a set of records that match the specified conditions
      *
      * @param mixed $parameters
-     * @return Robots[]
+     * @return RemoconButtons[]
      */
     public static function find($parameters = null)
     {
@@ -74,7 +67,7 @@ class Robots extends \Phalcon\Mvc\Model
      * Allows to query the first record that match the specified conditions
      *
      * @param mixed $parameters
-     * @return Robots
+     * @return RemoconButtons
      */
     public static function findFirst($parameters = null)
     {

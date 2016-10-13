@@ -39,11 +39,11 @@ class ApiController extends ControllerBase
             $model = null;
         }
         // パラメータの名前のプロパティがあったら取得
-        else if(property_exists($model,$param)) {
+        else if(isset($model->{$param}) || property_exists($model,$param)) {
           // プロパティを取得
           $property = $model->{$param};
           // プロパティが配列の場合、modelsを更新
-          if(is_array($property)) {
+          if($property instanceof ArrayAccess || is_array($property)) {
             // 自身に追加
             $this->add_model_this($model, true);
             // modelsを更新
@@ -63,9 +63,9 @@ class ApiController extends ControllerBase
         }
         // 見つからないエラー
         else {
+          echo "プロパティもメソッドも見つからないよ : " . $param;
           $model = null;
           $models = null;
-          echo "見つからないよ";
         }
 
         continue;
@@ -84,7 +84,7 @@ class ApiController extends ControllerBase
           }
           // エラー
           if(!$model) {
-            echo "見つからないよ";
+            echo "指定されたIDのモデルが見つからないよ : " . $param;
           }
           // 自身に追加
           $this->add_model_this($model, true);

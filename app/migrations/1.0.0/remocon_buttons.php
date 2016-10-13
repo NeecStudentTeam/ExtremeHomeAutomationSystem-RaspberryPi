@@ -6,9 +6,9 @@ use Phalcon\Db\Reference;
 use Phalcon\Mvc\Model\Migration;
 
 /**
- * Class RobotsMigration_100
+ * Class RemoconButtonsMigration_100
  */
-class RobotsMigration_100 extends Migration
+class RemoconButtonsMigration_100 extends Migration
 {
     /**
      * Define the table structure
@@ -17,42 +17,42 @@ class RobotsMigration_100 extends Migration
      */
     public function morph()
     {
-        $this->morphTable('robots', [
+        $this->morphTable('remocon_buttons', [
                 'columns' => [
                     new Column(
                         'id',
                         [
                             'type' => Column::TYPE_INTEGER,
                             'notNull' => true,
-                            'autoIncrement' => true,
                             'size' => 11,
                             'first' => true
-                        ]
-                    ),
-                    new Column(
-                        'robot_id',
-                        [
-                            'type' => Column::TYPE_INTEGER,
-                            'size' => 11,
-                            'after' => 'id'
                         ]
                     ),
                     new Column(
                         'name',
                         [
                             'type' => Column::TYPE_VARCHAR,
+                            'notNull' => true,
                             'size' => 50,
-                            'after' => 'robot_id'
+                            'after' => 'id'
                         ]
                     ),
                     new Column(
-                        'created_at',
+                        'remocon_id',
                         [
-                            'type' => Column::TYPE_TIMESTAMP,
-                            'default' => "CURRENT_TIMESTAMP",
+                            'type' => Column::TYPE_INTEGER,
                             'notNull' => true,
-                            'size' => 1,
+                            'size' => 11,
                             'after' => 'name'
+                        ]
+                    ),
+                    new Column(
+                        'ir_data',
+                        [
+                            'type' => Column::TYPE_VARCHAR,
+                            'notNull' => true,
+                            'size' => 50,
+                            'after' => 'remocon_id'
                         ]
                     )
                 ],
@@ -61,7 +61,7 @@ class RobotsMigration_100 extends Migration
                 ],
                 'options' => [
                     'TABLE_TYPE' => 'BASE TABLE',
-                    'AUTO_INCREMENT' => '2',
+                    'AUTO_INCREMENT' => '',
                     'ENGINE' => 'InnoDB',
                     'TABLE_COLLATION' => 'utf8_general_ci'
                 ],

@@ -1,13 +1,12 @@
 <?php
 
-class Robots extends \Phalcon\Mvc\Model
+class ApplianceStatuses extends \Phalcon\Mvc\Model
 {
 
     /**
      *
      * @var integer
      * @Primary
-     * @Identity
      * @Column(type="integer", length=11, nullable=false)
      */
     public $id;
@@ -15,33 +14,23 @@ class Robots extends \Phalcon\Mvc\Model
     /**
      *
      * @var integer
-     * @Column(type="integer", length=11, nullable=true)
+     * @Column(type="integer", length=11, nullable=false)
      */
-    public $robot_id;
+    public $appliance_id;
 
     /**
      *
      * @var string
-     * @Column(type="string", length=50, nullable=true)
+     * @Column(type="string", length=50, nullable=false)
      */
     public $name;
 
     /**
      *
      * @var string
-     * @Column(type="string", nullable=false)
+     * @Column(type="string", length=50, nullable=true)
      */
-    public $created_at;
-
-    public function initialize()
-    {
-        $this->hasOne("robot_id", "Robots", "id", array(
-            "alias" => "robot"
-        ));
-        $this->belongsTo("robot_id", "Robots", "id", array(
-            "alias" => "child_robots"
-        ));
-    }
+    public $value;
 
     /**
      * Returns table name mapped in the model.
@@ -50,20 +39,14 @@ class Robots extends \Phalcon\Mvc\Model
      */
     public function getSource()
     {
-        return 'robots';
-    }
-
-    public function test()
-    {
-      echo "test";
-      echo json_encode($this->child_robots);
+        return 'appliance_statuses';
     }
 
     /**
      * Allows to query a set of records that match the specified conditions
      *
      * @param mixed $parameters
-     * @return Robots[]
+     * @return ApplianceStatuses[]
      */
     public static function find($parameters = null)
     {
@@ -74,7 +57,7 @@ class Robots extends \Phalcon\Mvc\Model
      * Allows to query the first record that match the specified conditions
      *
      * @param mixed $parameters
-     * @return Robots
+     * @return ApplianceStatuses
      */
     public static function findFirst($parameters = null)
     {

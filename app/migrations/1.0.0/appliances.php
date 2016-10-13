@@ -6,9 +6,9 @@ use Phalcon\Db\Reference;
 use Phalcon\Mvc\Model\Migration;
 
 /**
- * Class RobotsMigration_100
+ * Class AppliancesMigration_100
  */
-class RobotsMigration_100 extends Migration
+class AppliancesMigration_100 extends Migration
 {
     /**
      * Define the table structure
@@ -17,42 +17,24 @@ class RobotsMigration_100 extends Migration
      */
     public function morph()
     {
-        $this->morphTable('robots', [
+        $this->morphTable('appliances', [
                 'columns' => [
                     new Column(
                         'id',
                         [
                             'type' => Column::TYPE_INTEGER,
                             'notNull' => true,
-                            'autoIncrement' => true,
                             'size' => 11,
                             'first' => true
-                        ]
-                    ),
-                    new Column(
-                        'robot_id',
-                        [
-                            'type' => Column::TYPE_INTEGER,
-                            'size' => 11,
-                            'after' => 'id'
                         ]
                     ),
                     new Column(
                         'name',
                         [
                             'type' => Column::TYPE_VARCHAR,
-                            'size' => 50,
-                            'after' => 'robot_id'
-                        ]
-                    ),
-                    new Column(
-                        'created_at',
-                        [
-                            'type' => Column::TYPE_TIMESTAMP,
-                            'default' => "CURRENT_TIMESTAMP",
                             'notNull' => true,
-                            'size' => 1,
-                            'after' => 'name'
+                            'size' => 50,
+                            'after' => 'id'
                         ]
                     )
                 ],
@@ -61,7 +43,7 @@ class RobotsMigration_100 extends Migration
                 ],
                 'options' => [
                     'TABLE_TYPE' => 'BASE TABLE',
-                    'AUTO_INCREMENT' => '2',
+                    'AUTO_INCREMENT' => '',
                     'ENGINE' => 'InnoDB',
                     'TABLE_COLLATION' => 'utf8_general_ci'
                 ],

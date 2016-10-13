@@ -1,6 +1,6 @@
 <?php
 
-class Robots extends \Phalcon\Mvc\Model
+class Remocons extends \Phalcon\Mvc\Model
 {
 
     /**
@@ -14,33 +14,16 @@ class Robots extends \Phalcon\Mvc\Model
 
     /**
      *
-     * @var integer
-     * @Column(type="integer", length=11, nullable=true)
-     */
-    public $robot_id;
-
-    /**
-     *
      * @var string
-     * @Column(type="string", length=50, nullable=true)
+     * @Column(type="string", length=50, nullable=false)
      */
     public $name;
 
-    /**
-     *
-     * @var string
-     * @Column(type="string", nullable=false)
-     */
-    public $created_at;
-
     public function initialize()
     {
-        $this->hasOne("robot_id", "Robots", "id", array(
-            "alias" => "robot"
-        ));
-        $this->belongsTo("robot_id", "Robots", "id", array(
-            "alias" => "child_robots"
-        ));
+      $this->hasMany("id", "RemoconButtons", "remocon_id", array(
+          "alias" => "remocon_buttons"
+      ));
     }
 
     /**
@@ -50,20 +33,14 @@ class Robots extends \Phalcon\Mvc\Model
      */
     public function getSource()
     {
-        return 'robots';
-    }
-
-    public function test()
-    {
-      echo "test";
-      echo json_encode($this->child_robots);
+        return 'remocons';
     }
 
     /**
      * Allows to query a set of records that match the specified conditions
      *
      * @param mixed $parameters
-     * @return Robots[]
+     * @return Remocons[]
      */
     public static function find($parameters = null)
     {
@@ -74,7 +51,7 @@ class Robots extends \Phalcon\Mvc\Model
      * Allows to query the first record that match the specified conditions
      *
      * @param mixed $parameters
-     * @return Robots
+     * @return Remocons
      */
     public static function findFirst($parameters = null)
     {
