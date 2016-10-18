@@ -15,7 +15,7 @@ class InfraredTransmitter {
     exec($exe_command, $output);
 
     //---排他処理終了---
-    if (!sem_release($res)) {
+    if (!sem_release($sem_id)) {
         throw new Exception('sem_release failed');
     }
     
