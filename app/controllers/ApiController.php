@@ -93,7 +93,7 @@ class ApiController extends ControllerBase
         }
         // パラメータが数値じゃなかった場合、スタティックメソッド名として実行
         else {
-          $models->getType()::$param($models);
+          // 未実装
           // modelsにnullを設定
           $models = null;
         }

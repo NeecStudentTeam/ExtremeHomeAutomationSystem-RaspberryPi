@@ -9,6 +9,20 @@ raspberry pi + nginx + php7 + php-phalcon + volt + bootstrap
 
 下の方で説明してます。
 
+## Composer
+composer使用してます。
+プロジェクトディレクトリで以下コマンドを実行し、ライブラリをインストール・アップデートしてください。
+
+`php composer.phar install`
+
+## DBマイグレーション
+Phalcon Dev Toolsでマイグレーションしてます。
+
+DB名は`home_automation`なので、作成してから実行してください。  
+プロジェクトディレクトリで以下を実行すると、DBが更新されます。
+
+`.\vendor\phalcon\devtools\phalcon migration run`
+
 ## 環境構築(xampp)
 
 Windows XAMPP環境への構築
@@ -33,6 +47,9 @@ extension=php_phalcon.dll
 以下のフォルダを空にし、以下のフォルダにgit pull
 `C:\xampp\htdocs`
 
+### composerとか
+composerとかDBマイグレーションとかする。  
+
 ### 確認
 
 XAMPPでApacheを起動
@@ -41,6 +58,7 @@ XAMPPでApacheを起動
 http://localhost/
 
 エラーが発生しなかったら完了
+
 
 ## 環境構築(pi)
 
@@ -136,8 +154,23 @@ php -m | grep phalcon
 # なんかやる
 
 # ---nginxを起動---
+# 確認
 
-# ---確認---
+# ---MySQL---
+# インストール
+sudo apt-get install mysql-server
+# インストール後、"home-automation"DBを作成
+
+# ---composerとかマイグレーションとかする---
+
+# ---WiringPIのインストール---
+sudo apt-get install libi2c-dev
+cd ~
+git clone git://git.drogon.net/wiringPi
+cd wiringPi
+./build
+# 確認
+gpio
 
 ```
 

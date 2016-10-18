@@ -39,7 +39,7 @@ class RemoconButtons extends \Phalcon\Mvc\Model
      */
     public function send()
     {
-        echo 'send ir : ' . base64_encode($this->ir_data);
+        echo json_encode(array('output' => InfraredTransmitter::send($this->ir_data)));
     }
 
     /**
