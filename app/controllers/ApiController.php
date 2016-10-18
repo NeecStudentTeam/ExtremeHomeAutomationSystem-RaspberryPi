@@ -24,7 +24,7 @@ class ApiController extends ControllerBase
   public function getEndpointAction(...$params)
   {
     $tmp_params = $params;
-    $param = array_shift($tmp_params);
+    $param = ucfirst(MyLib::camelize(array_shift($tmp_params)));
     $model = null;
     $models = $param::find();
     while(count($tmp_params) > 0)
