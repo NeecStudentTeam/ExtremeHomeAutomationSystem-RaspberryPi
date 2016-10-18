@@ -15,7 +15,7 @@
 | and database configuration into app/config/config.php
 |
 */
-define('ENVIRONMENT', 'development');
+define('ENVIRONMENT', 'production');
 
 /*
 |--------------------------------------------------------------------------
