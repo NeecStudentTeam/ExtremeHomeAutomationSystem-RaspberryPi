@@ -163,6 +163,14 @@ sudo apt-get install mysql-server
 
 # ---composerとかマイグレーションとかする---
 
+# ---WiringPIのインストール---
+sudo apt-get install libi2c-dev
+cd ~
+git clone git://git.drogon.net/wiringPi
+cd wiringPi
+./build
+# 確認
+gpio
 
 ```
 
