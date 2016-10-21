@@ -93,4 +93,9 @@ class MyLib {
   {
       return lcfirst(strtr(ucwords(strtr($str, ['_' => ' '])), [' ' => '']));
   }
+
+	public static function isWindowsServer()
+	{
+		return PHP_OS == "WIN32" || PHP_OS == "WIN64" || PHP_OS == "WINNT";
+	}
 }

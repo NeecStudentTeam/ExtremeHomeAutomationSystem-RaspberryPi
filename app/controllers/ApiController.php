@@ -25,6 +25,7 @@ class ApiController extends ControllerBase
   {
     $tmp_params = $params;
     $param = ucfirst(MyLib::camelize(array_shift($tmp_params)));
+    $function_result = null;
     $model = null;
     $models = $param::find();
     while(count($tmp_params) > 0)
@@ -35,7 +36,7 @@ class ApiController extends ControllerBase
       if($model) {
         // パラメータの名前のメソッドがあったら実行
         if(method_exists($model,$param)) {
-            $model->$param();
+            $function_result = $model->$param();
             $model = null;
         }
         // パラメータの名前のプロパティがあったら取得
@@ -102,12 +103,14 @@ class ApiController extends ControllerBase
       }
     }
 
-    // 最後にmodels or modelを出力
+    // 最後にmodels or model or function_resultを出力
     if($model) {
       $this->output_for_json($model);
     }
     else if($models) {
       $this->output_for_json($models);
+    } else if($function_result) {
+      $this->output_for_json($function_result);
     }
   }
 
