@@ -23,14 +23,129 @@ class ApiController extends ControllerBase
   // Model->deletes($models);
   public function getEndpointAction(...$params)
   {
-    $tmp_params = $params;
-    $param = ucfirst(MyLib::camelize(array_shift($tmp_params)));
+    // 通常のビューテンプレートを無効化
+  	$this->view->disable();
+    // パラメータからモデル or モデル一覧 or メソッド実行結果を取得
+    $result = $this->execute_by_params($params);
+    // 取得出来たか
+    if($result) {
+      // jsonで出力
+      $this->output_for_json($result);
+      // 正常終了ステータスコード
+      $this->response->setStatusCode(200, "OK");
+    }
+    // エラー　何も取得できなかった（URLが不正）
+    else {
+      $this->response->setStatusCode(404, "Not Found");
+    }
+  }
+
+  // POST /api/models
+  // モデルの追加
+  // /api/robots/1/robot_children/ の場合、robot_childrenのモデルを新しく追加する。 /robots/1/の部分は無視される。
+  public function postEndpointAction(...$params)
+  {
+      // 通常のビューテンプレートを無効化
+  	  $this->view->disable();
+      // 新しく追加するモデル名を取得
+      $model_name = ucfirst(MyLib::camelize(end($params)));
+      // 新しく追加するモデルのPOSTデータを取得
+      $post_data = $this->request->getJsonRawBody(true);
+      // 指定されたモデルが存在するか確認
+      if(class_exists($model_name)) {
+        // モデルをインスタンス化
+        $model = new $model_name();
+        // モデルにPOSTデータを設定
+        $model->assign($post_data);
+        // 保存
+        if($model->save() == true) {
+          // 作成したモデルにアクセスできるURLを返す
+          $this->response->setHeader('Location', '/api/' . implode('/',$params) . '/' . $model->id);
+          // 正常に終了した
+          $this->response->setStatusCode(201 , "Created");
+        }
+        // エラー　保存に失敗
+        else {
+          $this->response->setStatusCode(400 , "Bad Request");
+        }
+      } 
+      // エラー　モデルが見つからない
+      else {
+        $this->response->setStatusCode(404, "Not Found");
+      }
+      
+  }
+
+  // PUT /api/models/1
+  // 指定モデルの更新
+  public function putEndpointAction(...$params)
+  {
+      // 通常のビューテンプレートを無効化
+  	  $this->view->disable();
+      // パラメータからモデルを取得する
+      $model = $this->execute_by_params($params);
+      // 更新するモデルのPOSTデータを取得
+      $post_data = $this->request->getJsonRawBody(true);
+      
+      // 一意のモデルが取得出来ているか確認
+      if($model instanceof \Phalcon\Mvc\Model) {
+        // モデルにPOSTデータを設定
+        $model->assign($post_data);
+        // モデルをDBに反映
+        if($model->update() == true) {
+          // 正常に終了した
+          $this->response->setStatusCode(204, "No Content");
+        }
+        // エラー　保存に失敗
+        else {
+          $this->response->setStatusCode(400 , "Bad Request");
+        }
+      } 
+      // エラー　モデルが見つからない
+      else {
+        $this->response->setStatusCode(404, "Not Found");
+      }
+  }
+
+  // DELETE /api/models/1
+  // 指定モデルの削除
+  public function deleteEndpointAction(...$params)
+  {
+    // 通常のビューテンプレートを無効化
+    $this->view->disable();
+    // パラメータからモデルを取得する
+    $model = $this->execute_by_params($params);
+    
+    // 一意のモデルが取得出来ているか確認
+    if($model instanceof \Phalcon\Mvc\Model) {
+      // 指定モデルを削除
+      if($model->delete() == true) {
+        // 正常終了ステータスコード
+        $this->response->setStatusCode(204, "No Content");
+      }
+      // エラー　削除できなかった場合
+      else {
+        $this->response->setStatusCode(409, "Conflict");
+      }
+    } 
+    // エラー　削除するモデルが見つからない
+    else {
+      $this->response->setStatusCode(404, "Not Found");
+    }
+  }
+  
+  // "/hoge/1/hoge_children/2/" 等のパラメータを配列にしたものを指定すると、そのモデルを返す
+  // "/hoge/1/hoge_children/2/start" だと、hoge_childrenのID2のstartメソッドが実行され、それの戻り値が返される
+  // "/hoge/1/hoge_children/" だと、ID1のhogeのhoge_childrenの一覧が返される
+  private function execute_by_params($params) 
+  {
+    $param = ucfirst(MyLib::camelize(array_shift($params)));
     $function_result = null;
     $model = null;
     $models = $param::find();
-    while(count($tmp_params) > 0)
+    while(count($params) > 0)
     {
-      $param = array_shift($tmp_params);
+      $param = array_shift($params);
 
       // 一意のmodelが取得されていた場合
       if($model) {
@@ -45,8 +160,6 @@ class ApiController extends ControllerBase
           $property = $model->{$param};
           // プロパティが配列の場合、modelsを更新
           if($property instanceof ArrayAccess || is_array($property)) {
-            // 自身に追加
-            $this->add_model_this($model, true);
             // modelsを更新
             $models = $property;
             $model = null;
@@ -54,17 +167,13 @@ class ApiController extends ControllerBase
           // 一意の場合、modelを更新
           else
           {
-            // 自身に追加
-            $this->add_model_this($model, false);
-            $model = $property;
             // modelを更新
             $model = $property;
             $models = null;
           }
         }
-        // 見つからないエラー
+        // エラー 指定された名前のプロパティもメソッドも見つからない
         else {
-          echo "プロパティもメソッドも見つからないよ : " . $param;
           $model = null;
           $models = null;
         }
@@ -81,14 +190,13 @@ class ApiController extends ControllerBase
           foreach ($models as $models_model) {
             if($models_model->id == $param) {
               $model = $models_model;
+              break;
             }
           }
-          // エラー
+          // エラー　指定されたIDのモデルが見つからない
           if(!$model) {
-            echo "指定されたIDのモデルが見つからないよ : " . $param;
+            // 今のところエラー処理なし
           }
-          // 自身に追加
-          $this->add_model_this($model, true);
           // modelsにnullを設定
           $models = null;
         }
@@ -103,55 +211,24 @@ class ApiController extends ControllerBase
       }
     }
 
-    // 最後にmodels or model or function_resultを出力
+    // 最後にモデル or モデル一覧 or メソッド実行結果を返す
     if($model) {
-      $this->output_for_json($model);
+      return $model;
     }
     else if($models) {
-      $this->output_for_json($models);
+      return $models;
     } else if($function_result) {
-      $this->output_for_json($function_result);
+      return $function_result;
     }
-  }
-
-  // POST /api/models
-  // モデルの追加
-  public function postEndpointAction()
-  {
-  	  $this->view->disable();
-      $this->response->setStatusCode(201, "Created");
-      // 適当にLocationをつける
-      $this->response->setHeader('Location', '/api/models/15');
-  }
-
-  // PUT /api/models/1
-  // 指定モデルの更新
-  public function putEndpointAction(...$params)
-  {
-        $model = array(
-          'id' => $i,
-          'name' => 'TestModel' + $i,
-          'created_at' => '2011/01/01 20:00:00'
-        );
-
-        $this->response->setStatusCode(204, "No Content");
-  }
-
-  // DELETE /api/models/1
-  // 指定モデルの削除
-  public function deleteEndpointAction(...$params)
-  {
-  			$this->view->disable();
-        $this->response->setStatusCode(204, "No Content");
+    
+    // 何も取得できなかった場合、nullを返す　（パラメータが不正）
+    return null;
   }
 
   // jsonで出力する
   // GETのcallbackパラメータを取得し、json or jsonpを自動で判断する
-  // また、出力する際にviewを無効にする
   private function output_for_json($var)
   {
-    // viewを無効にする
-    $this->view->disable();
     // jsonの文字列を作成
     $json_str = json_encode($var);
     // callbackを取得
@@ -169,20 +246,6 @@ class ApiController extends ControllerBase
       $this->response->setHeader("Content-Type", "application/json");
       // jsonで出力
       echo $json_str;
-    }
-  }
-
-  // 自分にモデルを追加する
-  // $model_is_arrayをtrueにすると、arrayとして追加する
-  private function add_model_this($value, $value_is_array = false)
-  {
-    if($value_is_array) {
-      $model_name = MyLib::underscore(get_class($value));
-      $this->$model_name = $value;
-    }
-    else {
-      $model_name = MyLib::singularByPlural(MyLib::underscore(get_class($value)));
-      $this->$model_name = $value;
     }
   }
 }
