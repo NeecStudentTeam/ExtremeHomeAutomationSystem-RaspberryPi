@@ -73,7 +73,8 @@ class ApiController extends ControllerBase
       else {
         $this->response->setStatusCode(404, "Not Found");
       }
-      
+      // クロスドメイン
+      $this->response->setHeader('Access-Control-Allow-Origin', '*');
   }
 
   // PUT /api/models/1
@@ -105,6 +106,8 @@ class ApiController extends ControllerBase
       else {
         $this->response->setStatusCode(404, "Not Found");
       }
+      // クロスドメイン
+      $this->response->setHeader('Access-Control-Allow-Origin', '*');
   }
 
   // DELETE /api/models/1
