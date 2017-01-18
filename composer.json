@@ -1,5 +1,5 @@
 {
     "require": {
-        "phalcon/devtools": "~3.0.0"
+        "phalcon/devtools": "~3.0.1"
     }
 }

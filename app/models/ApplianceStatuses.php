@@ -30,7 +30,40 @@ class ApplianceStatuses extends \Phalcon\Mvc\Model
      * @var string
      * @Column(type="string", length=50, nullable=true)
      */
-    public $value;
+    protected $status;
+
+    /**
+     * Method to set the value of field value
+     *
+     * @param string $status
+     * @return $this
+     */
+    public function setStatus($status)
+    {
+        $this->status = $status;
+
+        $status_arr = json_decode($status,true);
+
+        switch($this->name) {
+          case "power":
+            // 設定されてる連動設定を全て取得
+            // 連動をする
+            // 指定された家電の電源をオンにするボタンを押す
+            break;
+        }
+
+        return $this;
+    }
+
+    /**
+     * Returns the value of field value
+     *
+     * @return string
+     */
+    public function getStatus()
+    {
+        return $this->status;
+    }
 
     /**
      * Returns table name mapped in the model.

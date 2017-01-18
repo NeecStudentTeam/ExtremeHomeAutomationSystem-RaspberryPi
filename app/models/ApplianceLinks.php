@@ -1,6 +1,6 @@
 <?php
 
-class Appliances extends \Phalcon\Mvc\Model
+class ApplianceLinks extends \Phalcon\Mvc\Model
 {
 
     /**
@@ -13,27 +13,31 @@ class Appliances extends \Phalcon\Mvc\Model
 
     /**
      *
-     * @var string
-     * @Column(type="string", length=50, nullable=false)
+     * @var integer
+     * @Column(type="integer", length=11, nullable=false)
      */
-    public $name;
+    public $appliance_link_set_id;
 
-    public function initialize()
-    {
-      $this->hasManyToMany(
-          "id",
-          "ApplianceRemocons",
-          "appliance_id", "remocon_id",
-          "Remocons",
-          "id",
-          array(
-              "alias" => "remocons"
-          )
-      );
-      $this->hasMany("id", "ApplianceStatuses", "appliance_id", array(
-          "alias" => "statuses"
-      ));
-    }
+    /**
+     *
+     * @var integer
+     * @Column(type="integer", length=11, nullable=false)
+     */
+    public $appliance_id;
+
+    /**
+     *
+     * @var integer
+     * @Column(type="integer", length=11, nullable=false)
+     */
+    public $link_appliance_id;
+
+    /**
+     *
+     * @var integer
+     * @Column(type="integer", length=11, nullable=false)
+     */
+    public $link_type;
 
     /**
      * Returns table name mapped in the model.
@@ -42,14 +46,14 @@ class Appliances extends \Phalcon\Mvc\Model
      */
     public function getSource()
     {
-        return 'appliances';
+        return 'appliance_links';
     }
 
     /**
      * Allows to query a set of records that match the specified conditions
      *
      * @param mixed $parameters
-     * @return Appliances[]
+     * @return ApplianceLinks[]
      */
     public static function find($parameters = null)
     {
@@ -60,7 +64,7 @@ class Appliances extends \Phalcon\Mvc\Model
      * Allows to query the first record that match the specified conditions
      *
      * @param mixed $parameters
-     * @return Appliances
+     * @return ApplianceLinks
      */
     public static function findFirst($parameters = null)
     {

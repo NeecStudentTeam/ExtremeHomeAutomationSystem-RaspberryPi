@@ -1,6 +1,6 @@
 <?php
 
-class Appliances extends \Phalcon\Mvc\Model
+class ApplianceLinkSets extends \Phalcon\Mvc\Model
 {
 
     /**
@@ -14,26 +14,16 @@ class Appliances extends \Phalcon\Mvc\Model
     /**
      *
      * @var string
-     * @Column(type="string", length=50, nullable=false)
+     * @Column(type="string", length=255, nullable=false)
      */
     public $name;
 
-    public function initialize()
-    {
-      $this->hasManyToMany(
-          "id",
-          "ApplianceRemocons",
-          "appliance_id", "remocon_id",
-          "Remocons",
-          "id",
-          array(
-              "alias" => "remocons"
-          )
-      );
-      $this->hasMany("id", "ApplianceStatuses", "appliance_id", array(
-          "alias" => "statuses"
-      ));
-    }
+    /**
+     *
+     * @var integer
+     * @Column(type="integer", length=11, nullable=false)
+     */
+    public $status;
 
     /**
      * Returns table name mapped in the model.
@@ -42,14 +32,14 @@ class Appliances extends \Phalcon\Mvc\Model
      */
     public function getSource()
     {
-        return 'appliances';
+        return 'appliance_link_sets';
     }
 
     /**
      * Allows to query a set of records that match the specified conditions
      *
      * @param mixed $parameters
-     * @return Appliances[]
+     * @return ApplianceLinkSets[]
      */
     public static function find($parameters = null)
     {
@@ -60,7 +50,7 @@ class Appliances extends \Phalcon\Mvc\Model
      * Allows to query the first record that match the specified conditions
      *
      * @param mixed $parameters
-     * @return Appliances
+     * @return ApplianceLinkSets
      */
     public static function findFirst($parameters = null)
     {
