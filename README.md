@@ -21,7 +21,7 @@ Phalcon Dev Toolsでマイグレーションしてます。
 DB名は`home_automation`なので、作成してから実行してください。  
 プロジェクトディレクトリで以下を実行すると、DBが更新されます。
 
-`.\vendor\phalcon\devtools\phalcon migration run`
+`php .\vendor\phalcon\devtools\phalcon.php migration run`
 
 ## 環境構築(xampp)
 
