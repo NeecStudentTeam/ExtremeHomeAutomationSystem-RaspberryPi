@@ -38,6 +38,8 @@ class ApiController extends ControllerBase
     else {
       $this->response->setStatusCode(404, "Not Found");
     }
+    // クロスドメイン
+    $this->response->setHeader('Access-Control-Allow-Origin', '*');
   }
 
   // POST /api/models
@@ -135,6 +137,8 @@ class ApiController extends ControllerBase
     else {
       $this->response->setStatusCode(404, "Not Found");
     }
+    // クロスドメイン
+    $this->response->setHeader('Access-Control-Allow-Origin', '*');
   }
   
   // "/hoge/1/hoge_children/2/" 等のパラメータを配列にしたものを指定すると、そのモデルを返す
