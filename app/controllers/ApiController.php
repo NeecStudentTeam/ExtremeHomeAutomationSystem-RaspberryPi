@@ -141,6 +141,20 @@ class ApiController extends ControllerBase
     $this->response->setHeader('Access-Control-Allow-Origin', '*');
   }
   
+  // OPTIONS /*
+  // 使用可能HTTPメソッドの送信
+  public function optionsEndpointAction()
+  {
+    // 通常のビューテンプレートを無効化
+    $this->view->disable();
+    // HTTPメソッド
+    $this->response->setHeader('Access-Control-Allow-Methods', 'POST, GET, PUT, DELETE, OPTIONS');
+    // クロスドメイン
+    $this->response->setHeader('Access-Control-Allow-Origin', '*');
+    // HTTPステータス
+    $this->response->setStatusCode(200, "OK");
+  }
+  
   // "/hoge/1/hoge_children/2/" 等のパラメータを配列にしたものを指定すると、そのモデルを返す
   // "/hoge/1/hoge_children/2/start" だと、hoge_childrenのID2のstartメソッドが実行され、それの戻り値が返される
   // "/hoge/1/hoge_children/" だと、ID1のhogeのhoge_childrenの一覧が返される
