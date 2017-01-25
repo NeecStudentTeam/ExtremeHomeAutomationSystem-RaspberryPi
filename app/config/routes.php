@@ -48,3 +48,8 @@ $router->addDelete("/api/:params", array(
         "action"     => "deleteEndpoint",
         "params"     => 1,
 ));
+
+$router->addOptions("/:params", array(
+        "controller" => "Api",
+        "action"     => "optionsEndpoint",
+));

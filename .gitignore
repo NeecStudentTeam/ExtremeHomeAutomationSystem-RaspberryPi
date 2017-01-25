@@ -1,4 +1,5 @@
 app/cache/volt/*.volt-compiled
-.phalcon/
 vendor
 composer.lock
+.phalcon/*
+!gitkeep
