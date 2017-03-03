@@ -77,6 +77,7 @@ class ApiController extends ControllerBase
       }
       // クロスドメイン
       $this->response->setHeader('Access-Control-Allow-Origin', '*');
+      $this->response->setHeader('Access-Control-Expose-Headers', 'Location');
   }
 
   // PUT /api/models/1
