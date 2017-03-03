@@ -151,36 +151,36 @@ $di->set('router', function() {
 | 404 system if the controller/action is not found
 | 
 */
-// $di->set('dispatcher', function() use ($di) {
-//
-//    $dispatcher = new \Phalcon\Mvc\Dispatcher();
-//
-//    $evManager = $di->getShared('eventsManager');
-//
-//    $evManager->attach("dispatch:beforeException", function($event, $dispatcher, $exception) use ($di) {
-//
-//
-//       switch ($exception->getCode()) {
-//
-//          case Phalcon\Dispatcher::EXCEPTION_HANDLER_NOT_FOUND:
-//          case Phalcon\Dispatcher::EXCEPTION_ACTION_NOT_FOUND:
-//
-//          $dispatcher->forward(
-//             array(
-//                'controller' => 'errors',
-//                'action'     => 'show404',
-//                )
-//             );
-//
-//          return FALSE;
-//
-//      }
-//  }
-//  );
-//
-//    $dispatcher->setEventsManager($evManager);
-//    return $dispatcher;
-//
-// }, TRUE
-//
-// );
+$di->set('dispatcher', function() use ($di) {
+
+   $dispatcher = new \Phalcon\Mvc\Dispatcher();
+
+   $evManager = $di->getShared('eventsManager');
+
+   $evManager->attach("dispatch:beforeException", function($event, $dispatcher, $exception) use ($di) {
+
+
+      switch ($exception->getCode()) {
+
+         case Phalcon\Dispatcher::EXCEPTION_HANDLER_NOT_FOUND:
+         case Phalcon\Dispatcher::EXCEPTION_ACTION_NOT_FOUND:
+
+         $dispatcher->forward(
+            array(
+               'controller' => 'errors',
+               'action'     => 'show404',
+               )
+            );
+
+         return FALSE;
+
+     }
+ }
+ );
+
+   $dispatcher->setEventsManager($evManager);
+   return $dispatcher;
+
+}, TRUE
+
+);

@@ -57,10 +57,8 @@ class ApiController extends ControllerBase
       if(class_exists($model_name)) {
         // モデルをインスタンス化
         $model = new $model_name();
-        // モデルにPOSTデータを設定
-        $model->assign($post_data);
         // 保存
-        if($model->save() == true) {
+        if(is_array($post_data) && $model->assign($post_data) && $model->save() == true) {
           // 作成したモデルにアクセスできるURLを返す
           $this->response->setHeader('Location', '/api/' . implode('/',$params) . '/' . $model->id);
           // 正常に終了した
@@ -93,10 +91,8 @@ class ApiController extends ControllerBase
       
       // 一意のモデルが取得出来ているか確認
       if($model instanceof \Phalcon\Mvc\Model) {
-        // モデルにPOSTデータを設定
-        $model->assign($post_data);
         // モデルをDBに反映
-        if($model->update() == true) {
+        if(is_array($post_data) && $model->assign($post_data) && $model->update() == true) {
           // 正常に終了した
           $this->response->setStatusCode(204, "No Content");
         }
