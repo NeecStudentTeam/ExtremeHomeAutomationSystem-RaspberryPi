@@ -11,11 +11,11 @@ class InfraredTransmitter {
     }
 
     // ---赤外線送信処理---
-    $exe_command = "sendir \"" . $value . "\"";
+    $exe_command = "sudo sendir \"" . $value . "\"";
     exec($exe_command, $output, $result);
 
     // コマンドが実行できない・もしくは存在しなかった場合
-    if (!$result) {
+    if ($result) {
       $output["error"] = "コマンド実行時にエラーが発生しました。";
     }
 
