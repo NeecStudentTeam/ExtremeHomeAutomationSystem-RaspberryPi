@@ -1,6 +1,6 @@
 <?php
 
-class ApplianceLinks extends \Phalcon\Mvc\Model
+class ApplianceLinkActions extends \Phalcon\Mvc\Model
 {
 
     /**
@@ -14,38 +14,10 @@ class ApplianceLinks extends \Phalcon\Mvc\Model
 
     /**
      *
-     * @var integer
-     * @Column(type="integer", length=11, nullable=false)
+     * @var string
+     * @Column(type="string", length=255, nullable=false)
      */
-    public $appliance_link_set_id;
-
-    /**
-     *
-     * @var integer
-     * @Column(type="integer", length=11, nullable=false)
-     */
-    public $trigger_appliance_id;
-
-    /**
-     *
-     * @var integer
-     * @Column(type="integer", length=11, nullable=false)
-     */
-    public $trigger_id;
-
-    /**
-     *
-     * @var integer
-     * @Column(type="integer", length=11, nullable=false)
-     */
-    public $action_appliance_id;
-
-    /**
-     *
-     * @var integer
-     * @Column(type="integer", length=11, nullable=false)
-     */
-    public $action_id;
+    public $name;
 
     /**
      * Returns table name mapped in the model.
@@ -54,14 +26,14 @@ class ApplianceLinks extends \Phalcon\Mvc\Model
      */
     public function getSource()
     {
-        return 'appliance_links';
+        return 'appliance_link_actions';
     }
 
     /**
      * Allows to query a set of records that match the specified conditions
      *
      * @param mixed $parameters
-     * @return ApplianceLinks[]
+     * @return ApplianceLinkActions[]
      */
     public static function find($parameters = null)
     {
@@ -72,7 +44,7 @@ class ApplianceLinks extends \Phalcon\Mvc\Model
      * Allows to query the first record that match the specified conditions
      *
      * @param mixed $parameters
-     * @return ApplianceLinks
+     * @return ApplianceLinkActions
      */
     public static function findFirst($parameters = null)
     {
