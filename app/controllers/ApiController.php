@@ -57,8 +57,12 @@ class ApiController extends ControllerBase
       if(class_exists($model_name)) {
         // モデルをインスタンス化
         $model = new $model_name();
+        // ポストデータが存在したらモデルに設定
+        if(is_array($post_data)) {
+          $model->assign($post_data);
+        }
         // 保存
-        if(is_array($post_data) && $model->assign($post_data) && $model->save() == true) {
+        if($model->save() === true) {
           // 作成したモデルにアクセスできるURLを返す
           $this->response->setHeader('Location', '/api/' . implode('/',$params) . '/' . $model->id);
           // 正常に終了した
@@ -66,6 +70,7 @@ class ApiController extends ControllerBase
         }
         // エラー　保存に失敗
         else {
+          $this->output_model_error_for_json($model);
           $this->response->setStatusCode(400 , "Bad Request");
         }
       } 
@@ -91,13 +96,18 @@ class ApiController extends ControllerBase
       
       // 一意のモデルが取得出来ているか確認
       if($model instanceof \Phalcon\Mvc\Model) {
+        // ポストデータが存在したらモデルに設定
+        if(is_array($post_data)) {
+          $model->assign($post_data);
+        }
         // モデルをDBに反映
-        if(is_array($post_data) && $model->assign($post_data) && $model->update() == true) {
+        if($model->update() == true) {
           // 正常に終了した
           $this->response->setStatusCode(204, "No Content");
         }
         // エラー　保存に失敗
         else {
+          $this->output_model_error_for_json($model);
           $this->response->setStatusCode(400 , "Bad Request");
         }
       } 
@@ -241,6 +251,15 @@ class ApiController extends ControllerBase
     
     // 何も取得できなかった場合、nullを返す　（パラメータが不正）
     return null;
+  }
+  
+  // modelのエラーをjsonで出力する
+  private function output_model_error_for_json($model) {
+      $error_messages = array();
+      foreach ($model->getMessages() as $message) {
+        $error_messages[] = strval($message);
+      }
+      $this->output_for_json(array('error_messages' => $error_messages));
   }
 
   // jsonで出力する
