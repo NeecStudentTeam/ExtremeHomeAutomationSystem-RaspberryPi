@@ -31,7 +31,7 @@ class Appliances extends \Phalcon\Mvc\Model
           )
       );
       $this->hasMany("id", "ApplianceStatuses", "appliance_id", array(
-          "alias" => "statuses"
+          "alias" => "appliance_statuses"
       ));
     }
 

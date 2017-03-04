@@ -18,7 +18,14 @@ class ApplianceLinkActions extends \Phalcon\Mvc\Model
      * @Column(type="string", length=255, nullable=false)
      */
     public $name;
-
+    
+    public function initialize()
+    {
+      $this->hasMany("id", "ApplianceLinks", "action_id", array(
+          "alias" => "appliance_links"
+      ));
+    }
+    
     /**
      * Returns table name mapped in the model.
      *

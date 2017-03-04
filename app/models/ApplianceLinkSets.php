@@ -24,7 +24,15 @@ class ApplianceLinkSets extends \Phalcon\Mvc\Model
      * @Column(type="integer", length=11, nullable=false)
      */
     public $status;
-
+    
+    public function initialize()
+    {
+      $this->hasMany("id", "ApplianceLinks", "appliance_link_set_id", array(
+          "alias" => "appliance_links"
+      ));
+    }
+    
+    
     /**
      * Returns table name mapped in the model.
      *

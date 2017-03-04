@@ -25,6 +25,27 @@ class ApplianceRemocons extends \Phalcon\Mvc\Model
      */
     public $remocon_id;
 
+    public function initialize()
+    {
+        $this->belongsTo(
+            "appliance_id",
+            "Appliances",
+            "id",
+            array(
+              "alias" => "appliance"
+            )
+        );
+        
+        $this->belongsTo(
+            "remocon_id",
+            "Remocons",
+            "id",
+            array(
+              "alias" => "remocon"
+            )
+        );
+    }
+    
     /**
      * Returns table name mapped in the model.
      *

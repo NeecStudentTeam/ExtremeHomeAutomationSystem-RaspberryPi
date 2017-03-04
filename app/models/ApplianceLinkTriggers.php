@@ -18,6 +18,13 @@ class ApplianceLinkTriggers extends \Phalcon\Mvc\Model
      */
     public $name;
 
+    public function initialize()
+    {
+      $this->hasMany("id", "ApplianceLinks", "trigger_id", array(
+          "alias" => "appliance_links"
+      ));
+    }
+    
     /**
      * Returns table name mapped in the model.
      *
@@ -50,4 +57,7 @@ class ApplianceLinkTriggers extends \Phalcon\Mvc\Model
         return parent::findFirst($parameters);
     }
 
+    public function trigger($status) {
+      
+    }
 }

@@ -31,6 +31,18 @@ class RemoconButtons extends \Phalcon\Mvc\Model
      * @Column(type="string", length=50, nullable=false)
      */
     public $ir_data;
+    
+    public function initialize()
+    {
+        $this->belongsTo(
+            "remocon_id",
+            "Remocons",
+            "id",
+            array(
+              "alias" => "remocon"
+            )
+        );
+    }
 
     /**
      * 赤外線情報送信

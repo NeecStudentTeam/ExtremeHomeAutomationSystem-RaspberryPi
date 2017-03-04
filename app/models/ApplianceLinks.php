@@ -46,7 +46,55 @@ class ApplianceLinks extends \Phalcon\Mvc\Model
      * @Column(type="integer", length=11, nullable=false)
      */
     public $action_id;
-
+    
+    public function initialize()
+    {
+      $this->belongsTo(
+          "appliance_link_set_id",
+          "ApplianceLinkSets",
+          "id",
+          array(
+            "alias" => "appliance_link_set"
+          )
+      );
+      
+      $this->belongsTo(
+          "trigger_appliance_id",
+          "Appliances",
+          "id",
+          array(
+            "alias" => "trigger_appliance"
+          )
+        );
+      );
+      
+      $this->belongsTo(
+          "trigger_id",
+          "ApplianceLinkTriggers",
+          "id",
+          array(
+            "alias" => "appliance_link_trigger"
+          )
+      );
+    
+      $this->belongsTo(
+          "action_appliance_id",
+          "Appliances",
+          "id",
+          array(
+            "alias" => "action_appliance"
+          )
+      );
+      
+      $this->belongsTo(
+          "action_id",
+          "ApplianceLinkActions",
+          "id",
+          array(
+            "alias" => "appliance_link_action"
+          )
+      );
+    }
     /**
      * Returns table name mapped in the model.
      *

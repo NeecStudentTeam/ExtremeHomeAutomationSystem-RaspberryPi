@@ -49,14 +49,29 @@ class ApiController extends ControllerBase
   {
       // 通常のビューテンプレートを無効化
   	  $this->view->disable();
+      
       // 新しく追加するモデル名を取得
-      $model_name = ucfirst(MyLib::camelize(end($params)));
-      // 新しく追加するモデルのPOSTデータを取得
-      $post_data = $this->request->getJsonRawBody(true);
+      $model_name = ucfirst(MyLib::camelize($params[count($params)-1]));
+      // 親モデルがあった場合、それを取得する
+      $parentModel = null;
+      if(count($params) > 2) {
+        $parentModelParams = array_slice($params, 0, count($params) - 1);
+        $parentModel = $this->execute_by_params($parentModelParams);
+      }
+      
       // 指定されたモデルが存在するか確認
-      if(class_exists($model_name)) {
+      if(($parentModel || count($params) == 1)  && class_exists($model_name)) {
         // モデルをインスタンス化
         $model = new $model_name();
+        
+        // 親モデルがあったらIDを設定する
+        if($parentModel) {
+          $singularName = MyLib::singularByPlural(MyLib::underscore(get_class($parentModel)));
+          $model->{$singularName . "_id"} = $parentModel->id;
+        }
+        
+        // 新しく追加するモデルのPOSTデータを取得
+        $post_data = $this->request->getJsonRawBody(true);
         // ポストデータが存在したらモデルに設定
         if(is_array($post_data)) {
           $model->assign($post_data);
@@ -170,7 +185,10 @@ class ApiController extends ControllerBase
     $param = ucfirst(MyLib::camelize(array_shift($params)));
     $function_result = null;
     $model = null;
-    $models = $param::find();
+    $models = null;
+    if(class_exists($param)) {
+      $models = $param::find();
+    }
     while(count($params) > 0)
     {
       $param = array_shift($params);
