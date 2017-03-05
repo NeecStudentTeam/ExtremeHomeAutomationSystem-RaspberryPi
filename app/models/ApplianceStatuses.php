@@ -88,7 +88,7 @@ class ApplianceStatuses extends \Phalcon\Mvc\Model
     {
         // ステータス変動時のイベント処理
         if(isset($this->previousStatus) && $this->previousStatus != $this->status) {
-            $appliance_links = ApplianceLinks::find("trigger_appliance_id = '" . $this->appliance->id "'");
+            $appliance_links = ApplianceLinks::find("trigger_appliance_id = '" . $this->appliance->id . "'");
             foreach($appliance_links as $appliance_link) {
               if($appliance_link->id == 1) {
                 

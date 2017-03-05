@@ -65,7 +65,6 @@ class ApplianceLinks extends \Phalcon\Mvc\Model
           array(
             "alias" => "trigger_appliance"
           )
-        );
       );
       
       $this->belongsTo(
