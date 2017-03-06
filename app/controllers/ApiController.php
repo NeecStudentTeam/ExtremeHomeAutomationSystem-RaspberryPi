@@ -49,7 +49,7 @@ class ApiController extends ControllerBase
   {
       // 通常のビューテンプレートを無効化
   	  $this->view->disable();
-      
+
       // 新しく追加するモデル名を取得
       $model_name = ucfirst(MyLib::camelize($params[count($params)-1]));
       // 親モデルがあった場合、それを取得する
@@ -58,18 +58,18 @@ class ApiController extends ControllerBase
         $parentModelParams = array_slice($params, 0, count($params) - 1);
         $parentModel = $this->execute_by_params($parentModelParams);
       }
-      
+
       // 指定されたモデルが存在するか確認
       if(($parentModel || count($params) == 1)  && class_exists($model_name)) {
         // モデルをインスタンス化
         $model = new $model_name();
-        
+
         // 親モデルがあったらIDを設定する
         if($parentModel) {
           $singularName = MyLib::singularByPlural(MyLib::underscore(get_class($parentModel)));
           $model->{$singularName . "_id"} = $parentModel->id;
         }
-        
+
         // 新しく追加するモデルのPOSTデータを取得
         $post_data = $this->request->getJsonRawBody(true);
         // ポストデータが存在したらモデルに設定
@@ -88,7 +88,7 @@ class ApiController extends ControllerBase
           $this->output_model_error_for_json($model);
           $this->response->setStatusCode(400 , "Bad Request");
         }
-      } 
+      }
       // エラー　モデルが見つからない
       else {
         $this->response->setStatusCode(404, "Not Found");
@@ -108,7 +108,7 @@ class ApiController extends ControllerBase
       $model = $this->execute_by_params($params);
       // 更新するモデルのPOSTデータを取得
       $post_data = $this->request->getJsonRawBody(true);
-      
+
       // 一意のモデルが取得出来ているか確認
       if($model instanceof \Phalcon\Mvc\Model) {
         // ポストデータが存在したらモデルに設定
@@ -125,7 +125,7 @@ class ApiController extends ControllerBase
           $this->output_model_error_for_json($model);
           $this->response->setStatusCode(400 , "Bad Request");
         }
-      } 
+      }
       // エラー　モデルが見つからない
       else {
         $this->response->setStatusCode(404, "Not Found");
@@ -142,7 +142,7 @@ class ApiController extends ControllerBase
     $this->view->disable();
     // パラメータからモデルを取得する
     $model = $this->execute_by_params($params);
-    
+
     // 一意のモデルが取得出来ているか確認
     if($model instanceof \Phalcon\Mvc\Model) {
       // 指定モデルを削除
@@ -154,7 +154,7 @@ class ApiController extends ControllerBase
       else {
         $this->response->setStatusCode(409, "Conflict");
       }
-    } 
+    }
     // エラー　削除するモデルが見つからない
     else {
       $this->response->setStatusCode(404, "Not Found");
@@ -162,7 +162,7 @@ class ApiController extends ControllerBase
     // クロスドメイン
     $this->response->setHeader('Access-Control-Allow-Origin', '*');
   }
-  
+
   // OPTIONS /*
   // 使用可能HTTPメソッドの送信
   public function optionsEndpointAction()
@@ -176,11 +176,11 @@ class ApiController extends ControllerBase
     // HTTPステータス
     $this->response->setStatusCode(200, "OK");
   }
-  
+
   // "/hoge/1/hoge_children/2/" 等のパラメータを配列にしたものを指定すると、そのモデルを返す
   // "/hoge/1/hoge_children/2/start" だと、hoge_childrenのID2のstartメソッドが実行され、それの戻り値が返される
   // "/hoge/1/hoge_children/" だと、ID1のhogeのhoge_childrenの一覧が返される
-  private function execute_by_params($params) 
+  private function execute_by_params($params)
   {
     $param = ucfirst(MyLib::camelize(array_shift($params)));
     $function_result = null;
@@ -266,11 +266,11 @@ class ApiController extends ControllerBase
     } else if($function_result) {
       return $function_result;
     }
-    
+
     // 何も取得できなかった場合、nullを返す　（パラメータが不正）
     return null;
   }
-  
+
   // modelのエラーをjsonで出力する
   private function output_model_error_for_json($model) {
       $error_messages = array();

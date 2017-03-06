@@ -31,17 +31,18 @@ class RemoconButtons extends \Phalcon\Mvc\Model
      * @Column(type="string", length=50, nullable=false)
      */
     public $ir_data;
-    
+
+
     public function initialize()
     {
-        $this->belongsTo(
-            "remocon_id",
-            "Remocons",
-            "id",
-            array(
-              "alias" => "remocon"
-            )
-        );
+      $this->belongsTo(
+          "remocon_id",
+          "Remocons",
+          "id",
+          array(
+            "alias" => "remocon"
+          )
+      );
     }
 
     /**
@@ -51,7 +52,28 @@ class RemoconButtons extends \Phalcon\Mvc\Model
      */
     public function send()
     {
-        return json_encode(array('output' => InfraredTransmitter::send($this->ir_data)));
+      // ステータスのトグル
+      if($this->name == "power") {
+        $appliances = $this->remocon->appliances;
+        foreach($appliances as $appliance) {
+            $status = $appliance->getStatusObj("power");
+            if($status) {
+              switch($status->status) {
+                case "on":
+                  $status->status = "off";
+                  // echo "send off";
+                  break;
+                case "off":
+                  $status->status = "on";
+                  // echo "send on";
+                  break;
+              }
+              $status->save();
+            }
+        }
+      }
+
+      return json_encode(array('output' => InfraredTransmitter::send($this->ir_data)));
     }
 
     /**

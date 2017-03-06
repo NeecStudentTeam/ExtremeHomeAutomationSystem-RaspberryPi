@@ -30,45 +30,19 @@ class ApplianceStatuses extends \Phalcon\Mvc\Model
      * @var string
      * @Column(type="string", length=50, nullable=true)
      */
-    protected $status;
-    
-    
+    public $status;
+
+
     public function initialize()
     {
-        $this->belongsTo(
-            "appliance_id",
-            "Appliances",
-            "id",
-            array(
-              "alias" => "appliance"
-            )
-        );
-    }
-    
-    /**
-     * Method to set the value of field value
-     *
-     * @param string $status
-     * @return $this
-     */
-    public function setStatus($status)
-    {
-        $this->status = $status;
-
-        $status_arr = json_decode($status,true);
-
-
-        return $this;
-    }
-
-    /**
-     * Returns the value of field value
-     *
-     * @return string
-     */
-    public function getStatus()
-    {
-        return $this->status;
+      $this->belongsTo(
+          "appliance_id",
+          "Appliances",
+          "id",
+          array(
+            "alias" => "appliance"
+          )
+      );
     }
 
     /**
@@ -80,27 +54,26 @@ class ApplianceStatuses extends \Phalcon\Mvc\Model
     {
         return 'appliance_statuses';
     }
-    public function afterFetch()
-    {
-        $this->previousStatus = $this->status;
-    }
     public function afterSave()
     {
         // ステータス変動時のイベント処理
-        if(isset($this->previousStatus) && $this->previousStatus != $this->status) {
-            $appliance_links = ApplianceLinks::find("trigger_appliance_id = '" . $this->appliance->id . "'");
-            foreach($appliance_links as $appliance_link) {
-              if($appliance_link->id == 1) {
-                
-              }
-            }
-              switch($this->name) {
-                case "power":
-                  // 設定されてる連動設定を全て取得
-                  // 連動をする
-                  // 指定された家電の電源をオンにするボタンを押す
-                  break;
-              }
+        $appliance_links = ApplianceLinks::find("trigger_appliance_id = " . $this->appliance->id);
+        foreach($appliance_links as $appliance_link) {
+          if($appliance_link->appliance_link_set->status == 0) continue;
+          if( ($this->name == "power" && $appliance_link->trigger_id == 1 && $this->status == "on") ||
+              ($this->name == "power" && $appliance_link->trigger_id == 2 && $this->status == "off")) {
+                switch($appliance_link->action_id) {
+                  case 1:
+                      $appliance_link->action_appliance->powerOn();
+                    break;
+                  case 2:
+                      $appliance_link->action_appliance->powerOff();
+                    break;
+                  case 3:
+                      $appliance_link->action_appliance->pushPowerButton();
+                    break;
+                }
+          }
         }
     }
 

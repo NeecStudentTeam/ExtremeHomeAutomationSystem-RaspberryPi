@@ -21,6 +21,16 @@ class Remocons extends \Phalcon\Mvc\Model
 
     public function initialize()
     {
+      $this->hasManyToMany(
+          "id",
+          "ApplianceRemocons",
+          "remocon_id", "appliance_id",
+          "Appliances",
+          "id",
+          array(
+              "alias" => "appliances"
+          )
+      );
       $this->hasMany("id", "RemoconButtons", "remocon_id", array(
           "alias" => "remocon_buttons"
       ));
